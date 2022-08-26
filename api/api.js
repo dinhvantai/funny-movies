@@ -4,6 +4,7 @@ import express from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { DISLIKE_ACTION_VALUE, LIKE_ACTION_VALUE } from '../configs/configs'
 
 const prisma = new PrismaClient()
 const app = express()
@@ -20,6 +21,42 @@ const tokenAuthorization = async (req) => {
 app.get('/me', async (req, res) => {
   try {
     res.json({ user: await tokenAuthorization(req) })
+  } catch (e) {
+    res.status(400).json({ message: e.message })
+  }
+})
+
+app.post('/actions', async (req, res) => {
+  try {
+    const user = await tokenAuthorization(req)
+    const {
+      action,
+      movieId,
+    } = req.body
+    if (![LIKE_ACTION_VALUE, DISLIKE_ACTION_VALUE].includes(action)) {
+      res.status(400).json({ message: 'Not allowed to do this!' })
+    }
+
+    const where = {
+      movie_id: movieId,
+      user_id: user.id,
+    }
+
+    const curAct = await prisma.action.findFirst({ where })
+
+    await prisma.action.upsert({
+      where: { id: curAct?.id || 0 },
+      update: {
+        ...where,
+        action,
+      },
+      create: {
+        ...where,
+        action,
+      },
+    })
+
+    res.json({ message: 'Successfully!' })
   } catch (e) {
     res.status(400).json({ message: e.message })
   }
@@ -46,6 +83,10 @@ app.get('/movies', async (req, res) => {
       skip: (page - 1) * perPage,
       where,
       orderBy: { id: 'desc' },
+      include: {
+        user: true,
+        actions: true,
+      },
     })
 
     const aggregations = await prisma.movie.aggregate({

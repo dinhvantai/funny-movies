@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center" class="mt-2">
     <v-col v-for="movie in movies" :key="movie.id" sm="10" cols="12">
-      <YoutubePlayer :video-id="movie.video_id"/>
+      <YoutubePlayer :movie="movie"/>
     </v-col>
     <v-col cols="12">
       <div class="text-center">
