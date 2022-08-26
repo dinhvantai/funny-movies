@@ -88,5 +88,5 @@ sw.*
 
 # Vim swap files
 *.swp
-*.sqlite
-!databases/base.sqlite
+prisma/databases
+prisma/migrations

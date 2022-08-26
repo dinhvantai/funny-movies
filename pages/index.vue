@@ -3,6 +3,7 @@
     <v-col cols="12" class="d-flex justify-center align-center">
       <v-switch
         v-model="isPublic"
+        :disabled="!user.id"
         :label="`${isPublic ? 'Public' : 'Private'}`"
       />
     </v-col>
@@ -32,5 +33,10 @@ export default {
     page: 1,
     isPublic: true,
   }),
+  computed: {
+    user () {
+      return this.$store.getters['profile/getUser']
+    },
+  },
 }
 </script>

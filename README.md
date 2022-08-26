@@ -3,8 +3,14 @@
 ## Build Setup
 
 ```bash
+# copy environment variables
+$ cp .env.example .env
+
 # install dependencies
 $ yarn install
+
+# Init prisma
+$ npx prisma migrate dev --name init
 
 # serve with hot reload at localhost:3000
 $ yarn dev

@@ -11,19 +11,13 @@ export const mutations = {
 }
 
 export const actions = {
-  async doFetchRoleInfo ({
+  doSetUser ({
     commit,
-    state,
-  }, params = {}) {
-    // try {
-    //   let {data} = await axios.get(config.apiEndPoints.API_ROLE_INFO, {params});
-    //   commit(SET_ROLE_INFO, data)
-    // } catch (e) {
-    // }
+  }, user = {}) {
+    commit(SET_USER, user)
   },
 }
 
 export const getters = {
   getUser: state => state.user,
-  getAuthInfo: state => state,
 }

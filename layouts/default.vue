@@ -54,8 +54,8 @@
         {{ title }}
       </v-toolbar-title>
       <v-spacer/>
-      <LoginForm class="mr-8" v-if="false"/>
-      <LoggedInformation/>
+      <LoginForm v-if="!user.id"/>
+      <LoggedInformation v-if="user.id"/>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -69,6 +69,27 @@
     >
       <span>Funny movies &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
+    <v-snackbar
+      dark
+      right
+      :timeout="snackbar.timeout"
+      :value="snackbar.value"
+      :color="snackbar.color"
+      rounded="pill"
+      @input="onChangeSnackbar"
+    >
+      {{ snackbar.content }}
+      <template #action="{ attrs }">
+        <v-btn
+          color="white"
+          text
+          v-bind="attrs"
+          @click="() => onChangeSnackbar(false)"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -99,6 +120,19 @@ export default {
       rightDrawer: false,
       title: 'Funny Movies',
     }
+  },
+  computed: {
+    snackbar () {
+      return this.$store.getters['snackbar/getSnackbar']
+    },
+    user () {
+      return this.$store.getters['profile/getUser']
+    },
+  },
+  methods: {
+    onChangeSnackbar (value) {
+      this.$store.dispatch('snackbar/doSetSnackbar', { value })
+    },
   },
 }
 </script>

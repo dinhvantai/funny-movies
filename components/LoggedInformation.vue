@@ -2,7 +2,7 @@
   <v-row>
     <v-col class="d-flex justify-end">
       <div>
-        Welcome: <strong class="title">abc@124.com</strong>
+        Welcome: <strong class="title text-uppercase">{{ user.username }}</strong>
       </div>
       <div class="ml-6">
         <v-btn
@@ -18,6 +18,7 @@
         <v-btn
           class="w-100"
           color="secondary"
+          @click="onLogout"
         >
           Logout
         </v-btn>
@@ -64,6 +65,8 @@
 </template>
 
 <script>
+import TokenService from '@/services/TokenService'
+
 export default {
   name: 'LoggedInformation',
   data: () => ({
@@ -73,5 +76,16 @@ export default {
       v => !!v || 'Url is required',
     ],
   }),
+  computed: {
+    user () {
+      return this.$store.getters['profile/getUser']
+    },
+  },
+  methods: {
+    onLogout () {
+      TokenService.saveToken('')
+      this.$store.dispatch('profile/doSetUser', {})
+    },
+  },
 }
 </script>
