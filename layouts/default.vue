@@ -53,6 +53,16 @@
         <v-icon class="mx-2">mdi-home</v-icon>
         {{ title }}
       </v-toolbar-title>
+      <div class="d-flex align-center">
+        <v-switch
+          class="mt-5 ml-4"
+          :input-value="!pagination.isPrivate"
+          :disabled="!user.id"
+          :label="`${pagination.isPrivate ? 'Private' : 'Public'}`"
+          @change="changeVisible"
+        />
+      </div>
+
       <v-spacer/>
       <LoginForm v-if="!user.id"/>
       <LoggedInformation v-if="user.id"/>
@@ -128,10 +138,23 @@ export default {
     user () {
       return this.$store.getters['profile/getUser']
     },
+    pagination () {
+      return this.$store.getters['sharedMovies/getPagination']
+    },
+  },
+  async mounted () {
+    try {
+      await this.$store.dispatch('sharedMovies/doFetchMovies')
+    } catch (e) {
+    }
   },
   methods: {
     onChangeSnackbar (value) {
       this.$store.dispatch('snackbar/doSetSnackbar', { value })
+    },
+    async changeVisible () {
+      await this.$store.dispatch('sharedMovies/doSetPagination', { isPrivate: !this.pagination.isPrivate })
+      await this.$store.dispatch('sharedMovies/doFetchMovies')
     },
   },
 }

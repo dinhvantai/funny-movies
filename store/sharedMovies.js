@@ -1,29 +1,51 @@
-const SET_USER = 'SET_USER'
+const SET_DATA = 'SET_DATA'
+const SET_PAGINATION = 'SET_PAGINATION'
 
 export const state = {
-  user: {},
+  movies: [],
+  pagination: {
+    page: 1,
+    total: 0,
+    perPage: 10,
+    isPrivate: false,
+  },
 }
 
 export const mutations = {
-  [SET_USER] (state, user = {}) {
-    state.user = user
+  [SET_DATA] (state, movies = []) {
+    state.movies = movies
+  },
+  [SET_PAGINATION] (state, pagination = {}) {
+    state.pagination = {
+      ...state.pagination,
+      ...pagination,
+    }
   },
 }
 
 export const actions = {
-  async doFetchRoleInfo ({
-    commit,
+  doSetMovies ({ commit }, movies = []) {
+    commit(SET_DATA, movies)
+  },
+
+  doSetPagination ({ commit }, pagination = {}) {
+    commit(SET_PAGINATION, pagination)
+  },
+
+  async doFetchMovies ({
     state,
-  }, params = {}) {
-    // try {
-    //   let {data} = await axios.get(config.apiEndPoints.API_ROLE_INFO, {params});
-    //   commit(SET_ROLE_INFO, data)
-    // } catch (e) {
-    // }
+    commit,
+  }) {
+    try {
+      const res = await this.$axios.get('movies', { params: state.pagination })
+      commit(SET_DATA, res.data.movies || [])
+      commit(SET_PAGINATION, res.data.meta)
+    } catch (e) {
+    }
   },
 }
 
 export const getters = {
-  getUser: state => state.user,
-  getAuthInfo: state => state,
+  getMovies: state => state.movies,
+  getPagination: state => state.pagination,
 }

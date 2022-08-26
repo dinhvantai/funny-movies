@@ -1,4 +1,5 @@
 // index.js
+import urlParser from 'url'
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
@@ -10,15 +11,80 @@ const app = express()
 // eslint-disable-next-line import/no-named-as-default-member
 app.use(express.json())
 
+const tokenAuthorization = async (req) => {
+  const token = req.header('authorization')
+
+  return await jwt.verify(token, process.env.JWT_SECRET_KEY)
+}
+
 app.get('/me', async (req, res) => {
   try {
-    const token = req.header('authorization')
-    const user = await jwt.verify(token, process.env.JWT_SECRET_KEY)
+    res.json({ user: await tokenAuthorization(req) })
+  } catch (e) {
+    res.status(400).json({ message: e.message })
+  }
+})
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+app.get('/movies', async (req, res) => {
+  try {
+    let page = parseInt(req.query.page || 1)
+    if (page < 1) {
+      page = 1
+    }
+    const where = {}
+    const isPrivate = req.query.isPrivate === 'true'
+
+    if (isPrivate) {
+      const user = await tokenAuthorization(req)
+      where.user_id = user.id
+    }
+
+    const perPage = 5
+    const movies = await prisma.movie.findMany({
+      take: perPage,
+      skip: (page - 1) * perPage,
+      where,
+      orderBy: { id: 'desc' },
+    })
+
+    const aggregations = await prisma.movie.aggregate({
+      _count: { id: true },
+      where,
+    })
 
     res.json({
-      message: 'Registered successfully!',
-      user,
+      movies,
+      meta: {
+        page,
+        total: aggregations._count.id,
+        perPage,
+      },
     })
+  } catch (e) {
+    res.status(400).json({ message: e.message })
+  }
+})
+
+app.post('/movies', async (req, res) => {
+  try {
+    const user = await tokenAuthorization(req)
+    const fullUrl = req.body.url
+    const url = new urlParser.URL(fullUrl)
+    const id = url.searchParams.get('v')
+    if (!id) {
+      res.status(400).json({ message: 'Invalid url!' })
+    }
+
+    await prisma.movie.create({
+      data: {
+        user_id: user.id,
+        full_url: fullUrl,
+        video_id: id,
+      },
+    })
+
+    res.json({ message: 'Successfully shared the video!' })
   } catch (e) {
     res.status(400).json({ message: e.message })
   }

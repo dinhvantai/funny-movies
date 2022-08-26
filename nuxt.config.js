@@ -10,8 +10,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - remitano-funny-movies',
-    title: 'remitano-funny-movies',
+    title: 'Funny Movies',
     meta: [
       { charset: 'utf-8' },
       {

@@ -11,10 +11,13 @@ export const mutations = {
 }
 
 export const actions = {
-  doSetUser ({
+  async doSetUser ({
     commit,
   }, user = {}) {
     commit(SET_USER, user)
+    if (!user || !user.id) {
+      await this.dispatch('sharedMovies/doSetPagination', { isPrivate: false })
+    }
   },
 }
 

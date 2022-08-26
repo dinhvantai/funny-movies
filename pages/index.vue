@@ -1,22 +1,16 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" class="d-flex justify-center align-center">
-      <v-switch
-        v-model="isPublic"
-        :disabled="!user.id"
-        :label="`${isPublic ? 'Public' : 'Private'}`"
-      />
+  <v-row justify="center" align="center" class="mt-2">
+    <v-col v-for="movie in movies" :key="movie.id" sm="10" cols="12">
+      <YoutubePlayer :video-id="movie.video_id"/>
     </v-col>
-    <v-col v-for="i in [1,2,3,4,5,6,7,8,9,10,11]" :key="i" sm="10" cols="12">
-      <YoutubePlayer video-id="LjhCEhWiKXk"/>
-    </v-col>
-    <v-col>
+    <v-col cols="12">
       <div class="text-center">
         <v-pagination
-          v-model="page"
-          :length="60"
+          :value="pagination.page"
+          :length="Math.ceil(pagination.total / pagination.perPage)"
           :total-visible="9"
           circle
+          @input="changePage"
         />
       </div>
     </v-col>
@@ -29,13 +23,26 @@ import YoutubePlayer from '~/components/YoutubePlayer'
 export default {
   name: 'IndexPage',
   components: { YoutubePlayer },
-  data: () => ({
-    page: 1,
-    isPublic: true,
-  }),
+  head () {
+    return {
+      title: 'Funny Movies',
+    }
+  },
   computed: {
     user () {
       return this.$store.getters['profile/getUser']
+    },
+    pagination () {
+      return this.$store.getters['sharedMovies/getPagination']
+    },
+    movies () {
+      return this.$store.getters['sharedMovies/getMovies']
+    },
+  },
+  methods: {
+    async changePage (page) {
+      await this.$store.dispatch('sharedMovies/doSetPagination', { page })
+      await this.$store.dispatch('sharedMovies/doFetchMovies')
     },
   },
 }
