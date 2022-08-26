@@ -87,24 +87,12 @@ export default {
     isDisliked () {
       return !!this.dislikeData.find(item => item.user_id === this.user.id)
     },
-    canLike () {
-      return this.user && this.user.id && !this.isLiked
-    },
-    canDislike () {
-      return this.user && this.user.id && !this.isDisliked
-    },
   },
   methods: {
     async doLikeAction () {
-      if (!this.canLike) {
-        return
-      }
       await this.doAction(LIKE_ACTION_VALUE)
     },
     async doDislikeAction () {
-      if (!this.canDislike) {
-        return
-      }
       await this.doAction(DISLIKE_ACTION_VALUE)
     },
     async doAction (action) {

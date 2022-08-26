@@ -44,6 +44,12 @@ app.post('/actions', async (req, res) => {
 
     const curAct = await prisma.action.findFirst({ where })
 
+    if (curAct && curAct.action === action) {
+      await prisma.action.delete({ where: { id: curAct.id } })
+
+      return res.json({ message: 'Successfully!' })
+    }
+
     await prisma.action.upsert({
       where: { id: curAct?.id || 0 },
       update: {

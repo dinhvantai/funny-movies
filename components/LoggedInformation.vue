@@ -104,6 +104,7 @@ export default {
 
         await this.$store.dispatch('sharedMovies/doFetchMovies')
         this.shareOpening = false
+        this.url = ''
       } catch (e) {
         await this.$store.dispatch('snackbar/doSetSnackbar', {
           value: true,
