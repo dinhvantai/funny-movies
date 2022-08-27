@@ -5,7 +5,7 @@ export default {
   ssr: false,
 
   serverMiddleware: [
-    '~/api/api.js',
+    '~/api/api.ts',
   ],
 
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -43,9 +43,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/axios.js' },
+    { src: '~/plugins/axios.ts' },
     {
-      src: '~/plugins/client.js',
+      src: '~/plugins/client.ts',
       mode: 'client',
     },
   ],
@@ -88,7 +88,7 @@ export default {
       '~/assets/variables.scss',
     ],
     theme: {
-      dark: false,
+      dark: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
