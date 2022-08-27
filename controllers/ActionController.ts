@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import prisma from '../services/PrismaService'
+import { prisma } from '../services/PrismaService'
 import * as configs from '../configs/configs'
 
 class ActionController {

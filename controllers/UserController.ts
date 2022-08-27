@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
-import prisma from '../services/PrismaService'
+import { prisma } from '../services/PrismaService'
 import UserService from '../services/UserService'
 import * as configs from '../configs/configs'
 
@@ -16,10 +16,8 @@ class UserController {
 
       const token = await jwt.sign(
         curUser,
-        process.env.JWT_SECRET_KEY,
-        {
-          expiresIn: configs.DEFAULT_TOKEN_EXPIRE,
-        },
+        process.env.JWT_SECRET_KEY || '',
+        { expiresIn: configs.DEFAULT_TOKEN_EXPIRE },
       )
 
       res.json({

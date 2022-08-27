@@ -1,11 +1,11 @@
 import bcrypt from 'bcrypt'
 
 import { DEFAULT_SALT_ROUNDS } from '../configs/configs'
-import PrismaService from './PrismaService'
+import { prisma } from './PrismaService'
 
 class UserService {
   async findByUserName (username: string): Promise<any> {
-    return await PrismaService.user.findFirst({
+    return await prisma.user.findFirst({
       where: { username },
     })
   }

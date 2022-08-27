@@ -5,10 +5,10 @@ module.exports = {
     '^vue$': 'vue/dist/vue.common.js',
   },
   setupFiles: [
-    '<rootDir>/test/setup-tests.ts',
+    '<rootDir>/test/setup-env.ts',
   ],
   setupFilesAfterEnv: [
-    '<rootDir>/test/mocks.ts',
+    '<rootDir>/test/setup-testing.ts',
   ],
   moduleFileExtensions: [
     'ts',

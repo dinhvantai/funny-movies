@@ -1,7 +1,7 @@
 import urlParser from 'url'
 import { Request, Response } from 'express'
 
-import prisma from '../services/PrismaService'
+import { prisma } from '../services/PrismaService'
 import { DEFAULT_PER_PAGE_QUERY } from '../configs/configs'
 import { getUserFromRequest } from '../middlewares/auth'
 
@@ -18,7 +18,7 @@ class MovieController {
 
       if (isPrivate) {
         const user = await getUserFromRequest(req)
-        where.user_id = user.id
+        where.user_id = user.id || ''
       }
 
       const perPage = DEFAULT_PER_PAGE_QUERY
@@ -59,7 +59,7 @@ class MovieController {
       const url = new urlParser.URL(fullUrl)
       const id = url.searchParams.get('v') || ''
       if (!id) {
-        res.status(400).json({ message: 'Invalid url!' })
+        return res.status(400).json({ message: 'Invalid url!' })
       }
 
       await prisma.movie.create({
@@ -70,9 +70,9 @@ class MovieController {
         },
       })
 
-      res.json({ message: 'Successfully shared the video!' })
+      return res.json({ message: 'Successfully shared the video!' })
     } catch (e: any) {
-      res.status(400).json({ message: e.message })
+      return res.status(400).json({ message: e.message })
     }
   }
 }
