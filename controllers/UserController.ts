@@ -1,18 +1,16 @@
-import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 
 import prisma from '../services/PrismaService'
+import UserService from '../services/UserService'
 import * as configs from '../configs/configs'
 
 class UserController {
   async login (req: Request, res: Response) {
     try {
-      const curUser = await prisma.user.findFirst({
-        where: { username: req.body.username },
-      })
+      const curUser = await UserService.findByUserName(req.body.username)
 
-      if (!curUser || !await bcrypt.compare(req.body.password, curUser.password)) {
+      if (!curUser || !await UserService.checkPassword(req.body.password, curUser.password)) {
         return res.status(400).json({ message: 'Login information is incorrect!' })
       }
 
@@ -42,7 +40,7 @@ class UserController {
       if (curUser) {
         return res.status(400).json({ message: 'Already exists user!' })
       }
-      const hashPass = await bcrypt.hash(req.body.password, 10)
+      const hashPass = await UserService.hashPassword(req.body.password)
       await prisma.user.create({
         data: {
           username: req.body.username,

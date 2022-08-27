@@ -10,7 +10,9 @@
         />
       </v-col>
       <v-col cols="7">
-        <v-card-title class="text--primary py-0">Video {{ movie.id }}</v-card-title>
+        <v-card-title class="text--primary py-0">
+          Video {{ movie.id }}
+        </v-card-title>
         <v-card-text>
           <div class="text-subtitle-1">
             Shared by:
@@ -68,7 +70,7 @@ export default {
     movie: {
       type: Object,
       required: true,
-      default: {},
+      default: () => ({}),
     },
   },
   computed: {

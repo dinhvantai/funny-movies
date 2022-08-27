@@ -19,7 +19,7 @@
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title"/>
+            <v-list-item-title v-text="item.title" />
           </v-list-item-content>
         </v-list-item>
       </v-list>
@@ -30,7 +30,7 @@
       app
       height="84"
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-btn
         icon
         @click.stop="miniVariant = !miniVariant"
@@ -50,7 +50,9 @@
         <v-icon>mdi-minus</v-icon>
       </v-btn>
       <v-toolbar-title class="d-flex align-center">
-        <v-icon class="mx-2">mdi-home</v-icon>
+        <v-icon class="mx-2">
+          mdi-home
+        </v-icon>
         {{ title }}
       </v-toolbar-title>
       <div class="d-flex align-center">
@@ -63,13 +65,13 @@
         />
       </div>
 
-      <v-spacer/>
-      <LoginForm v-if="!user.id"/>
-      <LoggedInformation v-if="user.id"/>
+      <v-spacer />
+      <LoginForm v-if="!user.id" />
+      <LoggedInformation v-if="user.id" />
     </v-app-bar>
     <v-main>
       <v-container>
-        <Nuxt/>
+        <Nuxt />
       </v-container>
     </v-main>
     <v-footer

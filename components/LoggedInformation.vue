@@ -30,7 +30,7 @@
       transition="dialog-top-transition"
       max-width="600"
     >
-      <template v-slot:default="dialog">
+      <template #default="dialog">
         <v-card>
           <v-toolbar
             color="primary"

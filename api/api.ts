@@ -10,14 +10,13 @@ const app = express()
 // eslint-disable-next-line import/no-named-as-default-member
 app.use(express.json())
 
-app.use(authMiddleware).get('/me', UserController.me)
-app.use(authMiddleware).post('/actions', ActionController.create)
-app.use(authMiddleware).post('/actions', MovieController.create)
-
-app.get('/movies', MovieController.index)
-
 app.post('/register', UserController.register)
 app.post('/login', UserController.login)
+app.get('/movies', MovieController.index)
+
+app.use(authMiddleware).get('/me', UserController.me)
+app.use(authMiddleware).post('/actions', ActionController.create)
+app.use(authMiddleware).post('/movies', MovieController.create)
 
 /**
  * logic for our api will go here
